@@ -1,4 +1,5 @@
 import logging
+import os
 from selenium import webdriver
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -39,8 +40,8 @@ class RegistrationService:
                     receiver_email=email_notification_target_address,
                     # subject="Badminton Registration",
                     # body="Your registration was successful.",
-                    subject='gogot',
-                    body='you are a gogot'
+                    subject="gogot",
+                    body="you are a gogot",
                 )
         chrome_options = Options()
         # chrome_options.add_argument("--headless")
@@ -66,7 +67,12 @@ class RegistrationService:
             )
 
     def _pay(self):
-        secret_code = "123"  # Replace with the actual CVV code
+        if os.getenv("DRY_RUN"):
+            logger.info("Dry run enabled. Skipping payment.")
+        secret_code = os.getenv("CVV_CODE", None)  # Replace with the actual CVV code
+        if not secret_code:
+            logger.error("CVV code not found. Payment cannot be completed.")
+            raise Exception("CVV code not found. Payment cannot be completed.")
         cvv_input = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.ID, "form_group_input3__cvv"))
         )

@@ -32,3 +32,4 @@ jobs:
         DISPLAY: ":99.0"
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
+        DRY_RUN: "true"
