@@ -2,9 +2,13 @@ name: Weekly Badminton Signup
 
 on:
   schedule:
-  #  run every Monday at 7pm  UTC
-    # - cron: '0 19 * * 1'
+    # Run every 2 minutes
     - cron: '*/2 * * * *'
+  # Comment out or remove the push trigger if you don't want it
+  # push:
+  #   branches:
+  #     - main
+
 jobs:
   runApp:
     runs-on: ubuntu-latest
@@ -13,26 +17,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Install dependencies
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-
-    - name: Run Selenium tests
-      run: |
-        source venv/bin/activate
-        python main.py
-      env:
-        DISPLAY: ":99.0"
-        USERNAME: ${{ secrets.USERNAME }}
-        PASSWORD: ${{ secrets.PASSWORD }}
-        CVV_CODE: ${{ secrets.CVV_CODE }}
-        SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
-        DRY_RUN: "true"
+      - name: Run Selenium tests
+        run: |
+          source venv/bin/activate
+          python main.py
+        env:
+          DISPLAY: ":99.0"
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          CVV_CODE: ${{ secrets.CVV_CODE }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          DRY_RUN: "true"
