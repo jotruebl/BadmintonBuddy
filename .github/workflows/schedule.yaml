@@ -33,6 +33,7 @@ jobs:
       - name: Run Selenium tests
         run: |
           source venv/bin/activate
+          chmod +x run.sh
           ./run.sh
         env:
           DISPLAY: ":99.0"
