@@ -1,12 +1,15 @@
 import typer
 import os
 from registration import RegistrationService
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def main(
     username: str = typer.Option(
         default=os.getenv("USERNAME", ""),
-        prompt="Enter your username",
+        help="Enter your username",
         hide_input=False,
     ),
     password: str = typer.Option(
@@ -17,17 +20,17 @@ def main(
     ),
     email_sender_address: str = typer.Option(
         default=os.getenv("SENDER_EMAIL", "jvtrueblood88@gmail.com"),
-        prompt="Enter sender email address",
+        help="Enter sender email address",
         hide_input=True,
     ),
     email_sender_password: str = typer.Option(
         default=os.getenv("SENDER_PASSWORD", ""),
-        prompt="Enter sender email password",
+        help="Enter sender email password",
         hide_input=True,
     ),
     email_notification_target_address: str = typer.Option(
         default=os.getenv("RECEIVER_EMAIL", "khush.jhug@gmail.com"),
-        prompt="Where to send email notification?",
+        help="Where to send email notification?",
         hide_input=False,
     ),
     dry_run: bool = typer.Option(
@@ -37,6 +40,7 @@ def main(
     ),
 ):
 
+    logger.info("Starting registration process...")
     registration_service = RegistrationService(
         username,
         password,
