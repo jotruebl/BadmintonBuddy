@@ -3,7 +3,8 @@ name: Weekly Badminton Signup
 on:
   schedule:
   #  run every Monday at 7pm  UTC
-    - cron: '0 19 * * 1'
+    # - cron: '0 19 * * 1'
+    - cron: '*/2 * * * *'
 jobs:
   runApp:
     runs-on: ubuntu-latest
@@ -32,4 +33,6 @@ jobs:
         DISPLAY: ":99.0"
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
+        CVV_CODE: ${{ secrets.CVV_CODE }}
+        SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
         DRY_RUN: "true"
