@@ -35,7 +35,6 @@ def main(
     ),
     dry_run: bool = typer.Option(
         default=False,
-        prompt="Enable dry run?",
         help="If enabled, the script will not perform any payment processing.",
     ),
 ):
