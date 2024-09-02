@@ -33,7 +33,7 @@ jobs:
       - name: Run Selenium tests
         run: |
           source venv/bin/activate
-          python main.py
+          ./run.sh
         env:
           DISPLAY: ":99.0"
           USERNAME: ${{ secrets.USERNAME }}
