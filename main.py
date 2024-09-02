@@ -12,7 +12,7 @@ def main(
     password: str = typer.Option(
         default=os.getenv("PASSWORD", ""), prompt="Enter your password", hide_input=True
     ),
-    cvv_code: str = typer.Option(
+    cvv: str = typer.Option(
         default=os.getenv("CVV_CODE", ""), prompt="Enter your CVV code", hide_input=True
     ),
     email_sender_address: str = typer.Option(
@@ -38,11 +38,15 @@ def main(
 ):
 
     registration_service = RegistrationService(
-        username, password, email_sender_address, email_sender_password, is_dry_run=dry_run
+        username,
+        password,
+        email_sender_address,
+        email_sender_password,
+        is_dry_run=dry_run,
     )
 
     result = registration_service.headless_register(
-        email_notification_target_address, 
+        email_notification_target_address,
     )
 
 
