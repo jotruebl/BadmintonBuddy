@@ -41,4 +41,5 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
           CVV_CODE: ${{ secrets.CVV_CODE }}
           SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
-          DRY_RUN: "true"
+          DRY_RUN: "True"
+          JUST_EMAIL: "True"

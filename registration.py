@@ -31,8 +31,11 @@ class RegistrationService:
         self.email_sender_password = email_sender_password
         self.is_dry_run_mode = is_dry_run
 
-    def headless_register(self, email_notification_target_address):
+    def headless_register(self, email_notification_target_address, just_email):
         if email_notification_target_address:
+            logger.info(
+                f"Sending email notification to: {email_notification_target_address}",
+            )
             email_sender = EmailSender(
                 sender_email=self.email_sender_address,
                 sender_password=self.email_sender_password,
@@ -45,6 +48,8 @@ class RegistrationService:
                 subject="gogot",
                 body="you are a gogot",
             )
+            if just_email:
+                return
         chrome_options = Options()
         # chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")

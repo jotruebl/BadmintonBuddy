@@ -4,6 +4,9 @@ from email.mime.multipart import MIMEMultipart
 import os
 import requests
 import http.client
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class EmailSender:
@@ -46,27 +49,33 @@ class EmailSender:
             print("Failed to send email")
 
     def send_email(self, receiver_email: str, subject: str, body: str):
+        logger.info(f"Sending email...")
         # Define email sender and server details
 
         smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
         smtp_port = int(os.getenv("SMTP_PORT", 587))
 
-        # Create a MIMEText object to represent the email
-        # Create a MIMEText object to represent the email
         msg = MIMEMultipart()
         msg["From"] = self.sender_email
         msg["To"] = receiver_email
         msg["Subject"] = subject
+        logger.info("Attaching body")
         msg.attach(MIMEText(body, "plain"))
 
         try:
             # Connect to the SMTP server and send the email
             server = smtplib.SMTP(smtp_server, smtp_port)
+            logger.debug("Connected to SMTP server")
             server.starttls()  # Upgrade the connection to a secure encrypted SSL/TLS connection
+            logger.debug("Connection upgraded to TLS")
+            logger.debug(f"{self.sender_email}, {self.sender_password}")
             server.login(self.sender_email, self.sender_password)
+            logger.debug("Logged in to SMTP server")
             text = msg.as_string()
+            logger.debug(f"Email content: {text}")
             server.sendmail(self.sender_email, receiver_email, text)
-            print(f"Email sent to {receiver_email}")
+            logger.debug("Email sent")
+            logger.info(f"Email sent to {receiver_email}")
         except Exception as e:
             print(f"Failed to send email. Error: {str(e)}")
         finally:
