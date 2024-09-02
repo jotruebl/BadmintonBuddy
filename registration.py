@@ -22,12 +22,14 @@ class RegistrationService:
         password,
         email_sender_address,
         email_sender_password,
+        is_dry_run=False,
     ):
         logger.info("Registration service initialized")
         self.username = username
         self.password = password
         self.email_sender_address = email_sender_address
         self.email_sender_password = email_sender_password
+        self.is_dry_run_mode = is_dry_run
 
     def headless_register(self, email_notification_target_address):
         if email_notification_target_address:
@@ -35,14 +37,14 @@ class RegistrationService:
                 sender_email=self.email_sender_address,
                 sender_password=self.email_sender_password,
             )
-            for i in range(10):
-                email_sender.send_email(
-                    receiver_email=email_notification_target_address,
-                    # subject="Badminton Registration",
-                    # body="Your registration was successful.",
-                    subject="gogot",
-                    body="you are a gogot",
-                )
+
+            email_sender.send_email(
+                receiver_email=email_notification_target_address,
+                # subject="Badminton Registration",
+                # body="Your registration was successful.",
+                subject="gogot",
+                body="you are a gogot",
+            )
         chrome_options = Options()
         # chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
@@ -59,16 +61,24 @@ class RegistrationService:
         finally:
             self.driver.quit()
 
-        if send_email_notification:
+        if email_notification_target_address:
             email_sender = EmailSender(
-                receiver_email=self.username,
-                subject="Badminton Registration",
-                body="Your registration was successful.",
+                sender_email=self.email_sender_address,
+                sender_password=self.email_sender_password,
+            )
+
+            email_sender.send_email(
+                receiver_email=email_notification_target_address,
+                # subject="Badminton Registration",
+                # body="Your registration was successful.",
+                subject="gogot",
+                body=f"finished. dry_run_status: {self.is_dry_run_mode}",
             )
 
     def _pay(self):
-        if os.getenv("DRY_RUN"):
+        if self.is_dry_run_mode:
             logger.info("Dry run enabled. Skipping payment.")
+            return
         secret_code = os.getenv("CVV_CODE", None)  # Replace with the actual CVV code
         if not secret_code:
             logger.error("CVV code not found. Payment cannot be completed.")
